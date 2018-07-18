@@ -1,0 +1,117 @@
+@php
+    class StockChecking{
+
+    private $product_id;
+    private $product_color;
+    private $qtyp;
+    private $unit_id;
+    private $result = [];
+    private $available_lot_and_qtyp = [];
+
+    public function __construct(array $product_id, array $product_color,array $qtyp, $unit_id){
+        $this->product_id = $product_id;
+        $this->product_color = $product_color;
+        $this->qtyp = $qtyp;
+        $this->unit_id = $unit_id;
+    }
+
+    private function getUniqueProductId(){
+        return array_unique($this->product_id);
+    }
+
+
+    private function getAvailableLotAndQtyp($product_id,$product_color,$order_qtyp,$unit_id){
+        $lot_and_qtyp = \App\Stock::select('lot_number','color_detail')->where([
+            'product_id' => $product_id,
+            'unit_id' => $unit_id,
+        ])->where('qtyp','>',0)
+        ->whereRaw('INSTR(color_detail, '.$product_color.') > 0')
+        ->get();
+        $lot_and_qtyp = $lot_and_qtyp->toArray();
+        if(!empty($lot_and_qtyp)){
+            $order_qtyp_remain = (int)$order_qtyp;
+            $available_lot_and_qtyp = [];
+            foreach ($lot_and_qtyp as $index => $value) {
+                foreach (explode(',',$value['color_detail']) as $key => $detail) {
+                    $color = explode('=',$detail)[0];
+                    $qtyp_in_stock = (int) explode('=',$detail)[1];
+                    if($color == $product_color){
+                        if ($qtyp_in_stock - $order_qtyp_remain >= 0) {
+                            $available_lot_and_qtyp[$value['lot_number']] = $order_qtyp_remain;
+                            $order_qtyp_remain = 0;
+                            break;
+                        }
+                        else{
+                            $available_lot_and_qtyp[$value['lot_number']] = $qtyp_in_stock;
+                            $order_qtyp_remain = $order_qtyp_remain - $qtyp_in_stock;
+                        }
+                    }
+                }
+            }
+            return ($order_qtyp_remain == 0) ? $available_lot_and_qtyp : null;
+        }
+        else{
+            return null;
+        }
+    }
+
+
+    private function getOrderQtyp($product_id){
+        $index_of_product = array_keys($this->product_id,$product_id);
+        $qtyp = 0;
+        foreach ($index_of_product as $index) {
+            $qtyp += $this->qtyp[$index];
+        }
+        return [$product_id => $qtyp];
+    }
+
+    public function calculate(){
+
+        $result = [];
+        for ($i=0; $i < sizeof($this->product_id); $i++) { 
+            $result[$i] = $this->getAvailableLotAndQtyp($this->product_id[$i],$this->product_color[$i],$this->qtyp[$i],$this->unit_id);
+        }
+        dd($result);
+/*
+        // Get only unique product id from all product id, this will remove duplicated product id
+        foreach ($this->getUniqueProductId() as $i => $unique_product_id){
+
+            // get infomation lot_number and qtyp of the specific product id
+            $lot_and_qtyp = $this->getAvailableLotAndQtyp($unique_product_id,$this->unit_id);
+
+            //dd($lot_and_qtyp);
+            // to loop the product id that has been ordered, need to get only specific product id
+            $filter_product = array_filter($this->product_id, function($var) use($unique_product_id){
+                return $var == $unique_product_id;
+            });
+
+            // loop the product id that has been ordered with the specific id
+            foreach ($filter_product as $j => $product_id){
+
+
+                $export_array = [];
+                $order_qtyp = $this->qtyp[$j];
+                foreach ($lot_and_qtyp as $k => $lot_and_qtyp_){
+                    if(($lot_and_qtyp_['qtyp'] - $order_qtyp) >= 0){
+                        $text = $lot_and_qtyp_['lot_number'].'='.$this->qtyp[$j];
+                        array_push($export_array, $text);
+                        $lot_and_qtyp[$k]['qtyp'] -= $order_qtyp;
+                        $this->qtyp[$j] = 0;
+                        break;
+                    }
+                    else{
+                        $text = $lot_and_qtyp_['lot_number'].'='.$lot_and_qtyp_['qtyp'];
+                        array_push($export_array,$text);
+                        $this->qtyp[$j] -= $lot_and_qtyp_['qtyp'];
+                        $order_qtyp = $this->qtyp[$j];
+                        unset($lot_and_qtyp[$k]);
+                    }
+                }
+                $result = ($this->qtyp[$j] === 0) ? join(',',$export_array) : null;
+                array_push($this->result,$result);
+            }
+        }*/
+        return $this->result;
+    }
+}
+@endphp

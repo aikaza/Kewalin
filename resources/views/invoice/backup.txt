@@ -1,0 +1,24 @@
+					@foreach ($ivs as $i => $iv)
+						<tr>
+							<td style="padding: 8px !important;">
+								{{ $i+1 }}
+							</td>
+							<td class="text-center">
+								<a href="#">
+									{{ $iv->customer->first_name }}
+									{{ $iv->customer->last_name }}
+								</a>
+							</td>
+							<td class="text-center">
+								<a href="{{ route('invoice.detail',$iv->customer_id) }}" class="underline">
+									{{ $iv->total }}
+								</a>
+							</td>
+							<td class="text-center">
+								<a href="#" class="text-primary action">อัพเดทสถานะ</a> &ensp;| &ensp;
+								<a href="#" class="text-info action">ดาวน์โหลด</a> &ensp;| &ensp;
+								<a href="#" class="text-info action">ปริ้นท์</a> &ensp;| &ensp;
+								<a href="#" class="text-danger action">ลบ</a>
+							</td>
+						</tr>
+						@endforeach

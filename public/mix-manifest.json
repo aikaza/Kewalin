@@ -1,0 +1,11 @@
+{
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/js/fastclick.js": "/js/fastclick.js",
+    "/js/nprogress.js": "/js/nprogress.js",
+    "/js/float/jquery.flot.js": "/js/float/jquery.flot.js",
+    "/js/float/jquery.pie.js": "/js/float/jquery.pie.js",
+    "/js/float/jquery.time.js": "/js/float/jquery.time.js",
+    "/js/float/jquery.stack.js": "/js/float/jquery.stack.js",
+    "/js/float/jquery.resize.js": "/js/float/jquery.resize.js"
+}

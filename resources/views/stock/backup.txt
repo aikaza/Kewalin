@@ -1,0 +1,39 @@
+
+						@foreach ($products as $p)
+						<tr>
+							<td>{{$p->name}}สี{{$p->color}}</td>
+							<td>
+								@if ($p->remain($p->id) !== 0)
+								{{$p->remain($p->id)}} ม้วน
+								@else
+								<span class="text-danger">ไม่มีสินค้า</span>
+								@endif
+							</td>
+							<td>
+								@if (!$p->lotNo($p->id)->isEmpty())
+								@foreach ($p->lotNo($p->id) as $lot_no)
+								<code>{{ $lot_no->lot_number }}</code>
+								@endforeach
+								@else
+								<span class="text-danger">ไม่มีสต็อก</span>
+								@endif
+							</td>
+							<td>
+								@if (count($p->images) > 0)
+								@foreach ($p->images as $img)
+								<img src="{{ asset('storage/'.$img->path) }}" width="50" height="50">
+								@endforeach
+								@else
+								ไม่มี
+								@endif
+							</td>
+							<td>
+								<span class="{{pStatus($p->remain($p->id))['class']}}">
+									{{ pStatus($p->remain($p->id))['text'] }}
+								</span>
+							</td>
+							<td class="text-center">
+								<a href="{{ route('stock.detail',$p->id) }}" class="btn btn-link">รายละเอียด</a>
+							</td>
+						</tr>
+						@endforeach

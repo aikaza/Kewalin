@@ -1,0 +1,114 @@
+/*
+* common use
+*/
+table{
+  width: 100% !important;
+}
+td,th{
+  font-size: 14px !important;
+  vertical-align: middle !important;
+}
+
+
+
+/*
+* input-table 
+*/
+table.input-table span{
+  padding: 0 8px;
+}
+table.input-table td{
+  border: none !important;
+  padding: 2px 1px !important;
+}
+table.input-table th, table.input-table td{
+  vertical-align: middle !important;
+}
+table.input-table tr:first-child td{
+  padding-top: 8px !important;
+}
+table.input-table tr:last-child td{
+  padding-bottom: 8px !important;
+}
+table.input-table.jambo_table{
+  border: none !important;
+}
+table.input-table.jambo_table:hover{
+  background-color: none !important;
+}
+table.input-table.jambo_table tfoot{
+  background: rgba(52,73,94,.94) !important;
+  color: #ECF0F1 !important;
+}
+table.input-table button{
+  margin: auto !important;
+}
+table.input-table td,th button{
+  margin: auto !important;
+}
+
+
+
+/*
+* table-cell
+*/
+table.table-cell{
+  table-layout: fixed;
+}
+table.table-cell .input-cell{
+  display: inline !important;
+  width: 100% !important;
+  height: 100% !important;
+  box-sizing: border-box !important;
+  -moz-box-sizing: border-box !important;
+  -webkit-box-sizing: border-box !important;
+  border: none !important;
+}
+table.table-cell.table-bordered td {
+  margin: 0 !important; 
+  padding: 0 !important;
+  height: 34px;
+}
+
+
+/*
+* jambo_table
+*/
+table.jambo_table:not(.hoveron) tbody tr:hover td{
+    background: transparent !important;
+    border-top: none !important;
+    border-bottom: none !important;
+}
+table.jambo_table.jambo_border thead {
+    border: 2px solid rgba(52, 73, 94, 0.94) !important;
+}
+
+
+/*
+* custom table
+*/
+table.padding-table td th::before{
+  content: '\2002'
+}
+table.padleft-table td{
+  padding-left: 8px !important;
+}
+
+
+
+/*
+* list-table
+*/
+table.list-table tr td:first-child{
+  width:1px;
+  white-space:nowrap;
+  font-weight: bold;
+}
+
+table.list-table tr td:first-child::after{
+  content: '\2002'
+}
+
+
+
+
